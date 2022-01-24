@@ -11,6 +11,9 @@ export default ({ employee }) => {
     const [animalCount, setCount] = useState(0)
     const [location, markLocation] = useState({ name: "" })
     const [classes, defineClasses] = useState("card employee")
+    
+    const [currentUserEmployee, setCurrentUserEmployee] = useState({employee: null})
+    
     const { employeeId } = useParams()
     const { getCurrentUser } = useSimpleAuth()
     const { resolveResource, resource } = useResourceResolver()
@@ -68,3 +71,4 @@ export default ({ employee }) => {
         </article>
     )
 }
+
