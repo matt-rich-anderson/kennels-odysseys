@@ -15,8 +15,6 @@ export default ({ employee }) => {
     const { getCurrentUser } = useSimpleAuth()
     const { resolveResource, resource } = useResourceResolver()
     
-    console.log(getCurrentUser)
-
     useEffect(() => {
         if (employeeId) {
             defineClasses("card employee--single")
