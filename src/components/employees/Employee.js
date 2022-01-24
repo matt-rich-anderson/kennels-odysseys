@@ -11,14 +11,19 @@ export default ({ employee }) => {
     const [animalCount, setCount] = useState(0)
     const [location, markLocation] = useState({ name: "" })
     const [classes, defineClasses] = useState("card employee")    
+    const [isEmployee, setAuth] = useState(false)
+    
     const { employeeId } = useParams()
     const { getCurrentUser } = useSimpleAuth()
     const { resolveResource, resource } = useResourceResolver()
     
+    
+
     useEffect(() => {
         if (employeeId) {
             defineClasses("card employee--single")
         }
+        setAuth(getCurrentUser().employee)
         resolveResource(employee, employeeId, EmployeeRepository.get)
     }, [])
 
@@ -48,17 +53,19 @@ export default ({ employee }) => {
                 </h5>
                 {
                     employeeId
+                    
                         ? <>
                             <section>
                                 Caring for 0 animals
                             </section>
                             <section>
-                                Working at unknown location
+                                { }
                             </section>
                         </>
                         : ""
                 }
 
+                
                 {
                     <button className="btn--fireEmployee" onClick={() => {}}>Fire</button>
                 }
