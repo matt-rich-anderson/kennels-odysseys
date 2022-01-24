@@ -9,8 +9,9 @@ export const LocationList = () => {
 
     useEffect(() => {
         LocationRepository.getAll()
+        .then(updateLocations)
     }, [])
-
+    
     return (
         <div className="locations">
             {locations.map(l => <Location key={l.id} location={l} />)}
