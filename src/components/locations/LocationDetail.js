@@ -42,6 +42,9 @@ export default () => {
                     }
                 </p>
                 <p className="lead detailCard__info">
+                   
+                   {/* Maps over employees based on location and renders names as links to individual employee modals */}
+                   
                    { 
                         location.employeeLocations.map((b, idx, arr) =>
                             <span key={idx}>
@@ -50,7 +53,7 @@ export default () => {
                             </span>
                     )}
 
-
+                    {/* commented out loaner code */}
                     {/* {OxfordList(location.employeeLocations, "employee.name")} */}
                 </p>
             </div>
