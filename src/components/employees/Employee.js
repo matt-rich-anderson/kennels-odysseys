@@ -10,13 +10,12 @@ import "./Employee.css"
 export default ({ employee }) => {
     const [animalCount, setCount] = useState(0)
     const [location, markLocation] = useState({ name: "" })
-    const [classes, defineClasses] = useState("card employee")
-    
-    const [currentUserEmployee, setCurrentUserEmployee] = useState({employee: null})
-    
+    const [classes, defineClasses] = useState("card employee")    
     const { employeeId } = useParams()
     const { getCurrentUser } = useSimpleAuth()
     const { resolveResource, resource } = useResourceResolver()
+    
+    console.log(getCurrentUser)
 
     useEffect(() => {
         if (employeeId) {
@@ -31,14 +30,14 @@ export default ({ employee }) => {
         }
     }, [resource])
 
+
     return (
         <article className={classes}>
             <section className="card-body">
                 <img alt="Kennel employee icon" src={person} className="icon--person" />
                 <h5 className="card-title">
                     {
-                        employeeId
-                            ? resource.name
+                        employeeId ? resource.name
                             : <Link className="card-link"
                                 to={{
                                     pathname: `/employees/${resource.id}`,
