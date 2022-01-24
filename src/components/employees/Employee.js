@@ -12,18 +12,20 @@ export default ({ employee }) => {
     const [location, markLocation] = useState({ name: "" })
     const [classes, defineClasses] = useState("card employee")    
     const [isEmployee, setAuth] = useState(false)
-    
+    const [kennelLocations, setKennelLocations] = useState({name: ""})
+
     const { employeeId } = useParams()
     const { getCurrentUser } = useSimpleAuth()
     const { resolveResource, resource } = useResourceResolver()
     
-    
+    console.log(location)
 
     useEffect(() => {
         if (employeeId) {
             defineClasses("card employee--single")
         }
-        setAuth(getCurrentUser().employee)
+        
+        setAuth(getCurrentUser().employee)        
         resolveResource(employee, employeeId, EmployeeRepository.get)
     }, [])
 
@@ -59,7 +61,10 @@ export default ({ employee }) => {
                                 Caring for 0 animals
                             </section>
                             <section>
-                                { }
+                                {/* {isEmployee === true ?
+                                <select>
+                                    <option></option>
+                                </select> } */}
                             </section>
                         </>
                         : ""
