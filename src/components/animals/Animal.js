@@ -84,13 +84,17 @@ export const Animal = ({ animal, syncAnimals,
                         <section>
                             <h6>Caretaker(s)</h6>
                             <span className="small">
-                                Unknown
+                                {
+                                    currentAnimal.animalCaretakers?.map(a => a.user.name + " ")
+                                }
                             </span>
 
 
                             <h6>Owners</h6>
                             <span className="small">
-                                Owned by unknown
+                                {
+                                    currentAnimal.animalOwners?.map(a => a.user.name + " ")
+                                }
                             </span>
 
                             {
