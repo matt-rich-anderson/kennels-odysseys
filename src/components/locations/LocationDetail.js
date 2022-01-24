@@ -42,7 +42,16 @@ export default () => {
                     }
                 </p>
                 <p className="lead detailCard__info">
-                    {OxfordList(location.employeeLocations, "employee.name")}
+                   { 
+                        location.employeeLocations.map((b, idx, arr) =>
+                            <span key={idx}>
+                                {idx > 0 && ", "}
+                                <Link to={`/employees/${b.userId}`}> {b.employee.name}</Link>
+                            </span>
+                    )}
+
+
+                    {/* {OxfordList(location.employeeLocations, "employee.name")} */}
                 </p>
             </div>
         </>
