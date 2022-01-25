@@ -12,13 +12,13 @@ export const Animal = ({ animal, syncAnimals,
     const [detailsOpen, setDetailsOpen] = useState(false)
     const [isEmployee, setAuth] = useState(false)
     const [myOwners, setPeople] = useState([])
-    const [ownersFound, setOwnersFound] = useState(false)
     const [allOwners, registerOwners] = useState([])
     const [classes, defineClasses] = useState("card animal")
     const { getCurrentUser } = useSimpleAuth()
     const history = useHistory()
     const { animalId } = useParams()
     const { resolveResource, resource: currentAnimal } = useResourceResolver()
+    const [ownersSet, setOwnsersSet] = useState(false);
 
     useEffect(() => {
         setAuth(getCurrentUser().employee)
@@ -31,6 +31,7 @@ export const Animal = ({ animal, syncAnimals,
         }
     }, [owners])
 
+
     const getPeople = () => {
         return AnimalOwnerRepository
             .getOwnersByAnimal(currentAnimal.id)
@@ -39,7 +40,7 @@ export const Animal = ({ animal, syncAnimals,
 
     useEffect(() => {
         getPeople()
-    }, [currentAnimal, ownersFound])
+    }, [currentAnimal])
 
     useEffect(() => {
         if (animalId) {
