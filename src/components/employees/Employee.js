@@ -6,6 +6,7 @@ import useSimpleAuth from "../../hooks/ui/useSimpleAuth";
 import person from "./person.png"
 import "./Employee.css"
 import LocationRepository from "../../repositories/LocationRepository";
+import { useHistory } from "react-router-dom/cjs/react-router-dom.min"
 
 export default ({ employee }) => {
     const [animalCount, setCount] = useState(0)
@@ -13,17 +14,19 @@ export default ({ employee }) => {
     const [classes, defineClasses] = useState("card employee")    
     const [isEmployee, setAuth] = useState(false)
     const [kennelLocations, setKennelLocations] = useState([])
-
-
+    const [newEmployeeLocation, setNewEmployeeLocation] = useState({locationId: null})
+    
+    
     const { employeeId } = useParams()
     const { getCurrentUser } = useSimpleAuth()
     const { resolveResource, resource } = useResourceResolver()
     
+    const history = useHistory()
+
     useEffect(() => {
         if (employeeId) {
             defineClasses("card employee--single")
         }
-        
         setAuth(getCurrentUser().employee)        
         resolveResource(employee, employeeId, EmployeeRepository.get)
         LocationRepository.getAll().then((data) => setKennelLocations(data))
@@ -34,7 +37,6 @@ export default ({ employee }) => {
             markLocation(resource.employeeLocations[0])
         }
     }, [resource])
-
 
     return (
         <article className={classes}>
@@ -59,12 +61,18 @@ export default ({ employee }) => {
                         ? <>
                             <section>
                                 Caring for 0 animals
-                            </section>
-                            
-                            
+                            </section>                           
                             <section>
-                                {isEmployee === true ?
-                                <select>
+                                {isEmployee === true ?                               
+                                <select 
+                                    onChange={(evt) => {
+                                    const copyState = {...newEmployeeLocation}
+                                    copyState.locationId = evt.target.value
+                                    copyState.userId = employeeId
+                                    setNewEmployeeLocation(copyState)
+                                    history.push("/employees")
+                                }}
+                                >
                                     {kennelLocations.map((location) => (<option key={location.id} id={location.id} value={location.id}>{location.name}</option>) )}
                                 </select>
                                 : null
