@@ -12,6 +12,7 @@ export const Animal = ({ animal, syncAnimals,
     const [detailsOpen, setDetailsOpen] = useState(false)
     const [isEmployee, setAuth] = useState(false)
     const [myOwners, setPeople] = useState([])
+    const [ownersFound, setOwnersFound] = useState(false)
     const [allOwners, registerOwners] = useState([])
     const [classes, defineClasses] = useState("card animal")
     const { getCurrentUser } = useSimpleAuth()
@@ -38,7 +39,7 @@ export const Animal = ({ animal, syncAnimals,
 
     useEffect(() => {
         getPeople()
-    }, [currentAnimal])
+    }, [currentAnimal, ownersFound])
 
     useEffect(() => {
         if (animalId) {
@@ -51,6 +52,9 @@ export const Animal = ({ animal, syncAnimals,
                 })
         }
     }, [animalId])
+
+    console.log(currentAnimal.name);
+    console.log(myOwners)
 
     return (
         <>
@@ -98,11 +102,11 @@ export const Animal = ({ animal, syncAnimals,
                             </span>
 
                             {
-                                myOwners.length < 2 && isEmployee
+                                (myOwners.length < 2 && isEmployee)
                                     ? <select defaultValue=""
                                         name="owner"
                                         className="form-control small"
-                                        onChange={ e => AnimalOwnerRepository.assignOwner(currentAnimal.id, e.target.value) } >
+                                        onChange={ e => AnimalOwnerRepository.assignOwner(currentAnimal.id, parseInt(e.target.value)).then(() => history.go(0)) } >
                                         <option value="">
                                             Select {myOwners.length === 1 ? "another" : "an"} owner
                                         </option>
