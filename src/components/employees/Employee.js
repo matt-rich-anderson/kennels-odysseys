@@ -5,21 +5,20 @@ import useResourceResolver from "../../hooks/resource/useResourceResolver";
 import useSimpleAuth from "../../hooks/ui/useSimpleAuth";
 import person from "./person.png"
 import "./Employee.css"
-
+import LocationRepository from "../../repositories/LocationRepository";
 
 export default ({ employee }) => {
     const [animalCount, setCount] = useState(0)
     const [location, markLocation] = useState({ name: "" })
     const [classes, defineClasses] = useState("card employee")    
     const [isEmployee, setAuth] = useState(false)
-    const [kennelLocations, setKennelLocations] = useState({name: ""})
+    const [kennelLocations, setKennelLocations] = useState([])
+
 
     const { employeeId } = useParams()
     const { getCurrentUser } = useSimpleAuth()
     const { resolveResource, resource } = useResourceResolver()
     
-    console.log(location)
-
     useEffect(() => {
         if (employeeId) {
             defineClasses("card employee--single")
@@ -27,6 +26,7 @@ export default ({ employee }) => {
         
         setAuth(getCurrentUser().employee)        
         resolveResource(employee, employeeId, EmployeeRepository.get)
+        LocationRepository.getAll().then((data) => setKennelLocations(data))
     }, [])
 
     useEffect(() => {
@@ -60,11 +60,15 @@ export default ({ employee }) => {
                             <section>
                                 Caring for 0 animals
                             </section>
+                            
+                            
                             <section>
-                                {/* {isEmployee === true ?
+                                {isEmployee === true ?
                                 <select>
-                                    <option></option>
-                                </select> } */}
+                                    {kennelLocations.map((location) => (<option key={location.id} id={location.id} value={location.id}>{location.name}</option>) )}
+                                </select>
+                                : null
+                                }
                             </section>
                         </>
                         : ""
