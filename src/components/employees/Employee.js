@@ -75,7 +75,7 @@ export default ({ employee }) => {
                                     EmployeeRepository.assignEmployee(copyState)
                                         .then(() => 
                                         {
-                                            const foundObject = resource?.locations?.find((user)=> user.userId === parseInt(employeeId)).id
+                                            const foundObject = resource?.locations?.find((user)=> user.userId === parseInt(employeeId))
                                             return fetchIt(`${Settings.remoteURL}/employeeLocations/${foundObject.id}`, "DELETE")})
                                         .then(() => history.push("/employees"))
 
