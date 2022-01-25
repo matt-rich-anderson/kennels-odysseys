@@ -7,6 +7,8 @@ import person from "./person.png"
 import "./Employee.css"
 import LocationRepository from "../../repositories/LocationRepository";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min"
+import Settings from "../../repositories/Settings";
+import { fetchIt } from "../../repositories/Fetch";
 
 export default ({ employee }) => {
     const [animalCount, setCount] = useState(0)
@@ -20,7 +22,8 @@ export default ({ employee }) => {
     const { employeeId } = useParams()
     const { getCurrentUser } = useSimpleAuth()
     const { resolveResource, resource } = useResourceResolver()
-    
+    console.log(resource)
+
     const history = useHistory()
 
     useEffect(() => {
@@ -67,12 +70,20 @@ export default ({ employee }) => {
                                 <select 
                                     onChange={(evt) => {
                                     const copyState = {...newEmployeeLocation}
-                                    copyState.locationId = evt.target.value
-                                    copyState.userId = employeeId
-                                    setNewEmployeeLocation(copyState)
-                                    history.push("/employees")
+                                    copyState.locationId = parseInt(evt.target.value)
+                                    copyState.userId = parseInt(employeeId)
+                                    EmployeeRepository.assignEmployee(copyState)
+                                        .then(() => 
+                                        {
+                                            const foundObject = resource?.locations?.find((user)=> user.userId === parseInt(employeeId)).id
+                                            return fetchIt(`${Settings.remoteURL}/employeeLocations/${foundObject.id}`, "DELETE")})
+                                        .then(() => history.push("/employees"))
+
+                                    // EmployeeRepository.updateEmployee(copyState.locationId, copyState.userId ).then(() => history.push("/employees"))
+                                    // setNewEmployeeLocation(copyState)
                                 }}
                                 >
+                                    <option>Choose a Location</option>
                                     {kennelLocations.map((location) => (<option key={location.id} id={location.id} value={location.id}>{location.name}</option>) )}
                                 </select>
                                 : null
