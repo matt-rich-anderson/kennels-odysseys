@@ -12,6 +12,8 @@ export const AnimalDialog = ({toggleDialog, animal}) => {
                     </div>
                 ))
             }
+
+            
             <button style={{
                 position: "absolute",
                 top: "1em",
