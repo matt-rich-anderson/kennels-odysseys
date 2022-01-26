@@ -6,7 +6,6 @@ import useSimpleAuth from "../../hooks/ui/useSimpleAuth";
 import person from "./person.png"
 import "./Employee.css"
 import LocationRepository from "../../repositories/LocationRepository";
-import { useHistory } from "react-router-dom/cjs/react-router-dom.min"
 import Settings from "../../repositories/Settings";
 import { fetchIt } from "../../repositories/Fetch";
 
