@@ -79,14 +79,15 @@ export default ({ employee }) => {
                                             return fetchIt(`${Settings.remoteURL}/employeeLocations/${foundObject.id}`, "DELETE")})
                                         .then(() => history.push("/employees"))
 
-                                    // EmployeeRepository.updateEmployee(copyState.locationId, copyState.userId ).then(() => history.push("/employees"))
-                                    // setNewEmployeeLocation(copyState)
                                 }}
                                 >
                                     <option>Choose a Location</option>
                                     {kennelLocations.map((location) => (<option key={location.id} id={location.id} value={location.id}>{location.name}</option>) )}
                                 </select>
-                                : null
+                                : 
+                                <section>
+                                    Employed at {location.locationId}
+                                </section>
                                 }
                             </section>
                         </>
