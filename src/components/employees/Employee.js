@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react"
-import { Link, useParams } from "react-router-dom"
+import { Link, useParams, useHistory } from "react-router-dom"
 import EmployeeRepository from "../../repositories/EmployeeRepository";
 import useResourceResolver from "../../hooks/resource/useResourceResolver";
 import useSimpleAuth from "../../hooks/ui/useSimpleAuth";
@@ -11,14 +11,17 @@ export default ({ employee }) => {
     const [animalCount, setCount] = useState(0)
     const [location, markLocation] = useState({ name: "" })
     const [classes, defineClasses] = useState("card employee")
+    const [isEmployee, setAuth] = useState(false)
     const { employeeId } = useParams()
     const { getCurrentUser } = useSimpleAuth()
     const { resolveResource, resource } = useResourceResolver()
+    const history = useHistory();
 
     useEffect(() => {
         if (employeeId) {
             defineClasses("card employee--single")
-        }
+        } 
+        setAuth(getCurrentUser().employee)
         resolveResource(employee, employeeId, EmployeeRepository.get)
     }, [])
 
@@ -58,10 +61,20 @@ export default ({ employee }) => {
                         </>
                         : ""
                 }
-
                 {
-                    <button className="btn--fireEmployee" onClick={() => {}}>Fire</button>
+                    isEmployee
+                         ? <button className="btn--fireEmployee" onClick={() => 
+                            EmployeeRepository.delete(resource.id)
+                            .then(EmployeeRepository.getAll())
+                            .then(() => {
+                                // This was not working as intended, look into why we had to resort to history.go()
+                             history.go('/employees')   
+                            })
+                
+                        }>Fire</button>
+                        : ""
                 }
+               
 
             </section>
 
