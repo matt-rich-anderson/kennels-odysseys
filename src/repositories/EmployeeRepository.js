@@ -23,5 +23,9 @@ export default {
     },
     async getAll() {
         return await fetchIt(`${Settings.remoteURL}/users?employee=true&_embed=employeeLocations`)
-    }
+    },
+
+    async updateEmployee(rel, userId) {
+        return await fetchIt(`${Settings.remoteURL}/employeeLocations/${userId}`, "PATCH", JSON.stringify({locationId: rel}))
+    },
 }
