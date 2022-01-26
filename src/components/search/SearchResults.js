@@ -1,10 +1,12 @@
 import React from "react"
-import { useLocation } from "react-router-dom";
+import { useLocation, Link } from "react-router-dom";
+import useSimpleAuth from "../../hooks/ui/useSimpleAuth";
 import "./SearchResults.css"
 
 
 export default () => {
     const location = useLocation()
+    const { getCurrentUser } = useSimpleAuth()
 
     const displayAnimals = () => {
         if (location.state?.animals.length) {
@@ -12,7 +14,15 @@ export default () => {
                 <React.Fragment>
                     <h2>Matching Animals</h2>
                     <section className="animals">
-                        Display matching animals
+                        {location.state.animals.map(animal => {
+                            return (
+                            <li>
+                                <Link className="result" to={{pathname:`animals/${animal.id}`}}>
+                                    {animal.name}
+                                </Link>
+                            </li>
+                        )
+                    })}
                     </section>
                 </React.Fragment>
             )
@@ -25,7 +35,15 @@ export default () => {
                 <React.Fragment>
                     <h2>Matching Employees</h2>
                     <section className="employees">
-                        Display matching employees
+                        {location.state.employees.map(employee => {
+                            return (
+                                <li>
+                                    <Link className="result" to={{pathname: `employees/${employee.id}`}}>
+                                        {employee.name}
+                                    </Link>
+                                </li>
+                            )
+                        })}
                     </section>
                 </React.Fragment>
             )
@@ -38,7 +56,15 @@ export default () => {
                 <React.Fragment>
                     <h2>Matching Locations</h2>
                     <section className="locations">
-                        Display matching locations
+                        {location.state.locations.map(location => {
+                            return (
+                                <li>
+                                    <Link className="result" to={{pathname: `/locations/${location.id}`}}>
+                                        {location.name}
+                                    </Link>
+                                </li>
+                            )
+                        })}
                     </section>
                 </React.Fragment>
             )
@@ -48,7 +74,7 @@ export default () => {
     return (
         <React.Fragment>
             <article className="searchResults">
-                {displayAnimals()}
+                {getCurrentUser().employee ? displayAnimals() : ""}
                 {displayEmployees()}
                 {displayLocations()}
             </article>
