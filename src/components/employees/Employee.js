@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from "react"
-import { Link, useParams } from "react-router-dom"
+import { Link, useParams, useHistory } from "react-router-dom"
 import EmployeeRepository from "../../repositories/EmployeeRepository";
 import useResourceResolver from "../../hooks/resource/useResourceResolver";
 import useSimpleAuth from "../../hooks/ui/useSimpleAuth";
 import person from "./person.png"
 import "./Employee.css"
 import LocationRepository from "../../repositories/LocationRepository";
-import { useHistory } from "react-router-dom/cjs/react-router-dom.min"
 import Settings from "../../repositories/Settings";
 import { fetchIt } from "../../repositories/Fetch";
 
@@ -17,12 +16,9 @@ export default ({ employee }) => {
     const [isEmployee, setAuth] = useState(false)
     const [kennelLocations, setKennelLocations] = useState([])
     const [newEmployeeLocation, setNewEmployeeLocation] = useState({locationId: null})
-    
-    
     const { employeeId } = useParams()
     const { getCurrentUser } = useSimpleAuth()
     const { resolveResource, resource } = useResourceResolver()
-    
     const history = useHistory()
 
     useEffect(() => {
@@ -99,11 +95,20 @@ export default ({ employee }) => {
                         </>
                         : ""
                 }
-
-                
                 {
-                    <button className="btn--fireEmployee" onClick={() => {}}>Fire</button>
+                    isEmployee
+                         ? <button className="btn--fireEmployee" onClick={() => 
+                            EmployeeRepository.delete(resource.id)
+                            .then(EmployeeRepository.getAll())
+                            .then(() => {
+                                // This was not working as intended, look into why we had to resort to history.go()
+                             history.go('/employees')   
+                            })
+                
+                        }>Fire</button>
+                        : ""
                 }
+               
 
             </section>
 
