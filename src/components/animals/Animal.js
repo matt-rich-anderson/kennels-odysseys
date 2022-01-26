@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from "react"
+import Settings from "../../repositories/Settings";
+import { fetchIt } from "../../repositories/Fetch";
 import { useHistory, useParams } from "react-router";
 import AnimalRepository from "../../repositories/AnimalRepository";
 import AnimalOwnerRepository from "../../repositories/AnimalOwnerRepository";
@@ -14,14 +16,15 @@ export const Animal = ({ animal, syncAnimals,
     const [myOwners, setPeople] = useState([])
     const [allOwners, registerOwners] = useState([])
     const [classes, defineClasses] = useState("card animal")
+    const [employees, setEmployees ] = useState([])
     const { getCurrentUser } = useSimpleAuth()
     const history = useHistory()
     const { animalId } = useParams()
     const { resolveResource, resource: currentAnimal } = useResourceResolver()
-    const [ownersSet, setOwnsersSet] = useState(false);
 
     useEffect(() => {
         setAuth(getCurrentUser().employee)
+        OwnerRepository.getAllEmployees().then((data) => setEmployees(data));
         resolveResource(animal, animalId, AnimalRepository.get)
     }, [])
 
@@ -54,8 +57,16 @@ export const Animal = ({ animal, syncAnimals,
         }
     }, [animalId])
 
-    console.log(currentAnimal.name);
-    console.log(myOwners)
+    const assignCaretaker = (event) => {
+        //create object
+        const caretakerObject = {
+            animalId: currentAnimal.id,
+            userId: parseInt(event.target.value)
+        }
+
+        //post object
+        fetchIt(`${Settings.remoteURL}/animalCaretakers`, "POST", JSON.stringify(caretakerObject)).then(() => history.go(0))
+    }
 
     return (
         <>
@@ -93,6 +104,22 @@ export const Animal = ({ animal, syncAnimals,
                                     currentAnimal.animalCaretakers?.map(a => a.user.name + " ")
                                 }
                             </span>
+
+                            {
+                                (isEmployee)
+                                    ? <select defaultValue=""
+                                        name="owner"
+                                        className="form-control small"
+                                        onChange={assignCaretaker} >
+                                        <option value="">
+                                            Select {currentAnimal.animalCaretakers?.length > 0 ? "another" : "a"} caretaker
+                                        </option>
+                                        {
+                                            employees.map(o => <option key={o.id} value={o.id}>{o.name}</option>)
+                                        }
+                                    </select>
+                                    : null
+                            }
 
 
                             <h6>Owners</h6>
