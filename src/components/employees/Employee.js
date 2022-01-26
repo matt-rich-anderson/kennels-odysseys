@@ -37,11 +37,11 @@ export default ({ employee }) => {
     }, [resource])
 
     const findEmployeeLocation = (() => {
-        const foundemployee = kennelLocations.find((location) => location.employeeLocations.userId === employeeId)
-        return foundemployee
+        const foundLocation = resource.locations?.map((location) => location.location.name).join()
+        console.log(foundLocation)
+        return foundLocation
     })
 
-    console.log(findEmployeeLocation())
 
     return (
         <article className={classes}>
@@ -65,7 +65,7 @@ export default ({ employee }) => {
                     
                         ? <>
                             <section>
-                                Caring for 0 animals
+                                Caring for { resource.animals?.length } animals
                             </section>                           
                             <section>
                                 {isEmployee === true ?                               
@@ -88,7 +88,7 @@ export default ({ employee }) => {
                                 </select>
                                 : 
                                 <section>
-                                   Employed at {findEmployeeLocation}
+                                   Employed at {findEmployeeLocation()}
                                 </section>
                                 }
                             </section>
