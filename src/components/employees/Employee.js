@@ -5,24 +5,31 @@ import useResourceResolver from "../../hooks/resource/useResourceResolver";
 import useSimpleAuth from "../../hooks/ui/useSimpleAuth";
 import person from "./person.png"
 import "./Employee.css"
-
+import LocationRepository from "../../repositories/LocationRepository";
+import { useHistory } from "react-router-dom/cjs/react-router-dom.min"
+import Settings from "../../repositories/Settings";
+import { fetchIt } from "../../repositories/Fetch";
 
 export default ({ employee }) => {
     const [animalCount, setCount] = useState(0)
     const [location, markLocation] = useState({ name: "" })
-    const [classes, defineClasses] = useState("card employee")
+    const [classes, defineClasses] = useState("card employee")    
     const [isEmployee, setAuth] = useState(false)
+    const [kennelLocations, setKennelLocations] = useState([])
+    const [newEmployeeLocation, setNewEmployeeLocation] = useState({locationId: null})
     const { employeeId } = useParams()
     const { getCurrentUser } = useSimpleAuth()
     const { resolveResource, resource } = useResourceResolver()
-    const history = useHistory();
+
+    const history = useHistory()
 
     useEffect(() => {
         if (employeeId) {
             defineClasses("card employee--single")
-        } 
-        setAuth(getCurrentUser().employee)
+        }
+        setAuth(getCurrentUser().employee)        
         resolveResource(employee, employeeId, EmployeeRepository.get)
+        LocationRepository.getAll().then((data) => setKennelLocations(data))
     }, [])
 
     useEffect(() => {
@@ -37,8 +44,7 @@ export default ({ employee }) => {
                 <img alt="Kennel employee icon" src={person} className="icon--person" />
                 <h5 className="card-title">
                     {
-                        employeeId
-                            ? resource.name
+                        employeeId ? resource.name
                             : <Link className="card-link"
                                 to={{
                                     pathname: `/employees/${resource.id}`,
@@ -51,12 +57,34 @@ export default ({ employee }) => {
                 </h5>
                 {
                     employeeId
+                    
                         ? <>
                             <section>
                                 Caring for 0 animals
-                            </section>
+                            </section>                           
                             <section>
-                                Working at unknown location
+                                {isEmployee === true ?                               
+                                <select 
+                                    onChange={(evt) => {
+                                    const copyState = {...newEmployeeLocation}
+                                    copyState.locationId = parseInt(evt.target.value)
+                                    copyState.userId = parseInt(employeeId)
+                                    EmployeeRepository.assignEmployee(copyState)
+                                        .then(() => 
+                                        {
+                                            const foundObject = resource?.locations?.find((user)=> user.userId === parseInt(employeeId))
+                                            return fetchIt(`${Settings.remoteURL}/employeeLocations/${foundObject.id}`, "DELETE")})
+                                        .then(() => history.push("/employees"))
+
+                                    // EmployeeRepository.updateEmployee(copyState.locationId, copyState.userId ).then(() => history.push("/employees"))
+                                    // setNewEmployeeLocation(copyState)
+                                }}
+                                >
+                                    <option>Choose a Location</option>
+                                    {kennelLocations.map((location) => (<option key={location.id} id={location.id} value={location.id}>{location.name}</option>) )}
+                                </select>
+                                : null
+                                }
                             </section>
                         </>
                         : ""
@@ -81,3 +109,4 @@ export default ({ employee }) => {
         </article>
     )
 }
+
