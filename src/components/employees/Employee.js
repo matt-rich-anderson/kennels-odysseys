@@ -19,7 +19,6 @@ export default ({ employee }) => {
     const { employeeId } = useParams()
     const { getCurrentUser } = useSimpleAuth()
     const { resolveResource, resource } = useResourceResolver()
-
     const history = useHistory()
 
     useEffect(() => {
@@ -36,6 +35,13 @@ export default ({ employee }) => {
             markLocation(resource.employeeLocations[0])
         }
     }, [resource])
+
+    const findEmployeeLocation = (() => {
+        const foundLocation = resource.locations?.map((location) => location.location.name).join()
+        console.log(foundLocation)
+        return foundLocation
+    })
+
 
     return (
         <article className={classes}>
@@ -59,7 +65,7 @@ export default ({ employee }) => {
                     
                         ? <>
                             <section>
-                                Caring for 0 animals
+                                Caring for { resource.animals?.length } animals
                             </section>                           
                             <section>
                                 {isEmployee === true ?                               
@@ -75,14 +81,15 @@ export default ({ employee }) => {
                                             return fetchIt(`${Settings.remoteURL}/employeeLocations/${foundObject.id}`, "DELETE")})
                                         .then(() => history.push("/employees"))
 
-                                    // EmployeeRepository.updateEmployee(copyState.locationId, copyState.userId ).then(() => history.push("/employees"))
-                                    // setNewEmployeeLocation(copyState)
                                 }}
                                 >
                                     <option>Choose a Location</option>
                                     {kennelLocations.map((location) => (<option key={location.id} id={location.id} value={location.id}>{location.name}</option>) )}
                                 </select>
-                                : null
+                                : 
+                                <section>
+                                   Employed at {findEmployeeLocation()}
+                                </section>
                                 }
                             </section>
                         </>
