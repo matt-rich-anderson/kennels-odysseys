@@ -22,8 +22,7 @@ export default ({ employee }) => {
     const { employeeId } = useParams()
     const { getCurrentUser } = useSimpleAuth()
     const { resolveResource, resource } = useResourceResolver()
-    console.log(resource)
-
+    
     const history = useHistory()
 
     useEffect(() => {
@@ -40,6 +39,13 @@ export default ({ employee }) => {
             markLocation(resource.employeeLocations[0])
         }
     }, [resource])
+
+    const findEmployeeLocation = (() => {
+        const foundemployee = kennelLocations.find((location) => location.employeeLocations.userId === employeeId)
+        return foundemployee
+    })
+
+    console.log(findEmployeeLocation())
 
     return (
         <article className={classes}>
@@ -86,7 +92,7 @@ export default ({ employee }) => {
                                 </select>
                                 : 
                                 <section>
-                                    Employed at {location.locationId}
+                                   Employed at {findEmployeeLocation}
                                 </section>
                                 }
                             </section>
